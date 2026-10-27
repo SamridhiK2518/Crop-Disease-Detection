@@ -104,6 +104,7 @@ def too_large(_):
     return jsonify({"error": "Image is too large. Maximum size is 5 MB."}), 413
 
 
+load_model()
+
 if __name__ == "__main__":
-    load_model()
     app.run(debug=False)
