@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CropCare AI - Crop Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="logo">🌿 CropCare <span>AI</span></div>
+      <nav>
+        <a href="#detect">Detect</a>
+        <a href="#history">History</a>
+        <a href="#how">How it works</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Spot crop diseases <em>early</em>, save your harvest.</h1>
+      <p>Upload a photo of a leaf and our Convolutional Neural Network will identify the disease and suggest treatment in seconds.</p>
+      <a href="#detect" class="btn btn-primary">Scan a leaf</a>
+    </div>
+  </section>
+
+  <main class="container">
+    {% if not model_ready %}
+    <div class="banner warn">⚠️ Model not found. Train it first with <code>python train_model.py</code>, then restart the app.</div>
+    {% endif %}
+
+    <section id="detect" class="grid">
+      <!-- Upload card -->
+      <div class="card">
+        <h2>1. Upload leaf image</h2>
+        <div id="dropzone" class="dropzone" tabindex="0">
+          <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" hidden />
+          <div id="dropText">
+            <div class="drop-icon">📷</div>
+            <p><strong>Click to upload</strong> or drag &amp; drop</p>
+            <small>JPG, PNG or WEBP · max 5 MB</small>
+          </div>
+          <img id="preview" alt="Leaf preview" hidden />
+        </div>
+        <div class="actions">
+          <button id="analyzeBtn" class="btn btn-primary" disabled>Analyze leaf</button>
+          <button id="resetBtn" class="btn btn-ghost">Clear</button>
+        </div>
+        <p class="tip">Tip: use a clear, well-lit photo of a single leaf on a plain background.</p>
+      </div>
+
+      <!-- Result card -->
+      <div class="card" id="resultCard">
+        <h2>2. Result</h2>
+
+        <div id="emptyState" class="empty">
+          <div class="drop-icon">🔍</div>
+          <p>Your analysis will appear here.</p>
+        </div>
+
+        <div id="loader" class="loader" hidden>
+          <div class="spinner"></div>
+          <p>Analyzing leaf...</p>
+        </div>
+
+        <div id="error" class="banner error" hidden></div>
+
+        <div id="result" hidden>
+          <div class="result-head">
+            <div>
+              <span class="crop-chip" id="cropName"></span>
+              <h3 id="diseaseName"></h3>
+            </div>
+            <span id="statusBadge" class="badge"></span>
+          </div>
+
+          <div class="confidence">
+            <div class="conf-label"><span>Confidence</span><strong id="confText"></strong></div>
+            <div class="bar"><div id="confBar" class="bar-fill"></div></div>
+          </div>
+
+          <div id="lowConf" class="banner warn" hidden>
+            The model is not very sure. Try a clearer photo of a single leaf.
+          </div>
+
+          <p id="description" class="desc"></p>
+
+          <div class="info-grid">
+            <div>
+              <h4>💊 Treatment</h4>
+              <ul id="treatment"></ul>
+            </div>
+            <div>
+              <h4>🛡️ Prevention</h4>
+              <ul id="prevention"></ul>
+            </div>
+          </div>
+
+          <h4>Other possibilities</h4>
+          <ul id="top3" class="top3"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="history" class="card history">
+      <div class="history-head">
+        <h2>Recent scans</h2>
+        <button id="clearHistory" class="btn btn-ghost small">Clear history</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </section>
+
+    <section id="how" class="how">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step"><span>1</span><h4>Upload</h4><p>Choose a leaf photo from your device.</p></div>
+        <div class="step"><span>2</span><h4>Analyze</h4><p>A CNN trained on thousands of leaf images processes it.</p></div>
+        <div class="step"><span>3</span><h4>Act</h4><p>Get the disease name, treatment and prevention tips.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>CropCare AI · Third-year Digital AI project · Built with TensorFlow &amp; Flask</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
